@@ -1,0 +1,243 @@
+openapi: 3.0.1
+info:
+  title: Deudas API
+  description: API para gestionar deudas.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+tags:
+  - name: Deudas
+    description: Operaciones relacionadas con las deudas.
+
+paths:
+  /api/deudas:
+    post:
+      summary: Crear una nueva deuda
+      tags: [Deudas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deudas'
+      responses:
+        '201':
+          description: ¡Nueva deuda creada exitosamente!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda creada exitosamente"
+                  data:
+                    $ref: '#/components/schemas/Deudas'
+        '400':
+          description: Error al crear la deuda.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error al crear la deuda. Revisa los datos enviados."
+
+    get:
+      summary: Obtener todas las deudas
+      tags: [Deudas]
+      responses:
+        '200':
+          description: Lista de todas las deudas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deudas'
+        '500':
+          description: Error al obtener las deudas.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error al obtener las deudas."
+
+  /api/deudas/{id_Deuda}:
+    get:
+      summary: Obtener una deuda por ID
+      tags: [Deudas]
+      parameters:
+        - in: path
+          name: id_Deuda
+          schema:
+            type: number
+          required: true
+          description: ID de la deuda que se quiere obtener
+      responses:
+        '200':
+          description: Deuda encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deudas'
+        '404':
+          description: Deuda no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda no encontrada."
+        '500':
+          description: Error al obtener la deuda.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error al obtener la deuda."
+
+    put:
+      summary: Actualizar una deuda por ID
+      tags: [Deudas]
+      parameters:
+        - in: path
+          name: id_Deuda
+          schema:
+            type: number
+          required: true
+          description: ID de la deuda que se quiere actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deudas'
+      responses:
+        '200':
+          description: Deuda actualizada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda actualizada exitosamente"
+        '404':
+          description: Deuda no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda no encontrada."
+        '400':
+          description: Error al actualizar la deuda.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error al actualizar la deuda. Revisa los datos enviados."
+
+    delete:
+      summary: Eliminar una deuda por ID
+      tags: [Deudas]
+      parameters:
+        - in: path
+          name: id_Deuda
+          schema:
+            type: number
+          required: true
+          description: ID de la deuda que se quiere eliminar
+      responses:
+        '200':
+          description: Deuda eliminada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda eliminada exitosamente"
+        '404':
+          description: Deuda no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deuda no encontrada."
+        '500':
+          description: Error al eliminar la deuda.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error al eliminar la deuda."
+
+components:
+  schemas:
+    Deudas:
+      type: object
+      required:
+        - id_Deuda
+        - numeroCuotas
+        - montoPorCuota
+        - fechaInicio
+        - fechaFin
+        - estado
+      properties:
+        id_Deuda:
+          type: number
+          description: Identificador único de la deuda.
+        numeroCuotas:
+          type: number
+          description: Número total de cuotas para la deuda.
+        montoPorCuota:
+          type: number
+          description: Monto a pagar por cada cuota de la deuda.
+        fechaInicio:
+          type: string
+          format: date
+          description: Fecha en que inicia la deuda.
+        fechaFin:
+          type: string
+          format: date
+          description: Fecha en que finaliza la deuda.
+        estado:
+          type: string
+          enum:
+            - activo
+            - finalizado
+            - en mora
+          description: Estado actual de la deuda.
+      example:
+        id_Deuda: 101
+        numeroCuotas: 12
+        montoPorCuota: 150.75
+        fechaInicio: "2024-10-01T00:00:00.000Z"
+        fechaFin: "2025-10-01T00:00:00.000Z"
+        estado: "activo"

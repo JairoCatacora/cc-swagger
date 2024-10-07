@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: API de Clientes
+  description: API para la gestión de clientes en la base de datos 'inventory'.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Servidor local
+
+paths:
+  /clientes:
+    get:
+      summary: Obtiene todos los clientes
+      description: Retorna una lista de todos los clientes en la base de datos.
+      responses:
+        200:
+          description: Lista de clientes obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id_cliente:
+                      type: integer
+                      example: 1
+                    nombre:
+                      type: string
+                      example: "Juan"
+                    apellido:
+                      type: string
+                      example: "Pérez"
+                    edad:
+                      type: integer
+                      example: 30
+                    numero:
+                      type: string
+                      example: "+123456789"
+                    correo:
+                      type: string
+                      example: "juan.perez@example.com"
+
+    post:
+      summary: Crea un nuevo cliente
+      description: Crea un nuevo cliente en la base de datos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: "Juan"
+                apellido:
+                  type: string
+                  example: "Pérez"
+                edad:
+                  type: integer
+                  example: 30
+                numero:
+                  type: string
+                  example: "+123456789"
+                correo:
+                  type: string
+                  example: "juan.perez@example.com"
+      responses:
+        201:
+          description: Cliente creado correctamente
+        400:
+          description: Error en los datos proporcionados
+
+  /clientes/{id_cliente}:
+    get:
+      summary: Obtiene un cliente por su ID
+      description: Retorna los datos de un cliente específico.
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del cliente
+      responses:
+        200:
+          description: Cliente obtenido correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_cliente:
+                    type: integer
+                    example: 1
+                  nombre:
+                    type: string
+                    example: "Juan"
+                  apellido:
+                    type: string
+                    example: "Pérez"
+                  edad:
+                    type: integer
+                    example: 30
+                  numero:
+                    type: string
+                    example: "+123456789"
+                  correo:
+                    type: string
+                    example: "juan.perez@example.com"
+        404:
+          description: Cliente no encontrado
+
+    put:
+      summary: Actualiza un cliente
+      description: Actualiza los datos de un cliente existente en la base de datos.
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del cliente a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: "Juan"
+                apellido:
+                  type: string
+                  example: "Pérez"
+                edad:
+                  type: integer
+                  example: 30
+                numero:
+                  type: string
+                  example: "+123456789"
+                correo:
+                  type: string
+                  example: "juan.perez@example.com"
+      responses:
+        200:
+          description: Cliente actualizado correctamente
+        404:
+          description: Cliente no encontrado
+
+    delete:
+      summary: Elimina un cliente
+      description: Elimina un cliente por su ID de la base de datos.
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del cliente a eliminar
+      responses:
+        200:
+          description: Cliente eliminado correctamente
+        404:
+          description: Cliente no encontrado

@@ -1,0 +1,174 @@
+openapi: 3.0.1
+info:
+  title: Transacciones API
+  description: API para gestionar transacciones en la base de datos.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+tags:
+  - name: Transacciones
+    description: Operaciones relacionadas con transacciones
+
+paths:
+  /transaccion/all:
+    get:
+      tags:
+        - Transacciones
+      summary: Obtener todas las transacciones
+      description: Devuelve una lista de todas las transacciones almacenadas en la base de datos.
+      responses:
+        '200':
+          description: Lista de transacciones obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransaccionDto'
+        '500':
+          description: Error interno del servidor.
+
+  /transaccion/me:
+    get:
+      tags:
+        - Transacciones
+      summary: Obtener transacciones por ID
+      description: Devuelve una lista de transacciones filtradas por un conjunto de IDs.
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          description: Lista de IDs para filtrar las transacciones
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 1
+      responses:
+        '200':
+          description: Lista de transacciones obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransaccionDto'
+        '404':
+          description: Transacciones no encontradas.
+        '500':
+          description: Error interno del servidor.
+
+  /transaccion/:
+    post:
+      tags:
+        - Transacciones
+      summary: Crear una nueva transacción
+      description: Crea una nueva transacción en la base de datos.
+      requestBody:
+        description: Datos de la nueva transacción
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransaccionDto'
+      responses:
+        '201':
+          description: Transacción creada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransaccionDto'
+        '400':
+          description: Solicitud inválida.
+        '500':
+          description: Error interno del servidor.
+
+  /transaccion/{id}:
+    put:
+      tags:
+        - Transacciones
+      summary: Actualizar una transacción
+      description: Actualiza una transacción existente en la base de datos.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Datos actualizados de la transacción
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransaccionDto'
+      responses:
+        '200':
+          description: Transacción actualizada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransaccionDto'
+        '404':
+          description: Transacción no encontrada.
+        '400':
+          description: Solicitud inválida.
+        '500':
+          description: Error interno del servidor.
+
+    delete:
+      tags:
+        - Transacciones
+      summary: Eliminar una transacción
+      description: Elimina una transacción existente en la base de datos.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Transacción eliminada exitosamente.
+        '404':
+          description: Transacción no encontrada.
+        '500':
+          description: Error interno del servidor.
+
+components:
+  schemas:
+    TransaccionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        monto:
+          type: number
+          format: float
+          example: 1234.56
+        fecha:
+          type: string
+          format: date-time
+          example: '2024-10-06T12:00:00Z'
+        estado:
+          type: string
+          example: 'completado'
+        tipoTransaccionDto:
+          $ref: '#/components/schemas/TipoTransaccionDto'
+          
+    TipoTransaccionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        tipo:
+          type: string
+          example: 'pago'
+        descripcion:
+          type: string
+          example: 'Pago por servicio'
+          
